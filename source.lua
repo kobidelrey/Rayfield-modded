@@ -862,7 +862,7 @@ do
 	Rayfield.Main.Search.Shadow.Image = customAssets[tostring(5587865193)]
 	Rayfield.Notifications.Template.Icon.Image = customAssets[tostring(77891951053543)]
 	Rayfield.Notifications.Template.Shadow.Image = customAssets[tostring(3523728077)]
-	Rayfield.Loading.Banner.Image = "rbxassetid://100711592096115"
+	Rayfield.Loading.Banner.Image = "rbxassetid://71366743688152"
 
 end -- custom asset block
 
