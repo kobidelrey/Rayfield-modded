@@ -956,60 +956,7 @@ local function ChangeTheme(Theme)
 			end
 		end
 	end
-
-	-- Update background image tint to match new theme
-	local bg = Main:FindFirstChild("CustomBackground")
-	if bg and bg:FindFirstChild("ThemeTint") then
-		bg.ThemeTint.BackgroundColor3 = SelectedTheme.Background
-	end
 end
-
--- Custom Background Image setup
-local customBG = Instance.new("ImageLabel")
-customBG.Name = "CustomBackground"
-customBG.Size = UDim2.new(1, 0, 1, 0)
-customBG.Position = UDim2.new(0, 0, 0, 0)
-customBG.ZIndex = 1
-customBG.ScaleType = Enum.ScaleType.Crop
-customBG.BackgroundTransparency = 1
-customBG.ImageTransparency = 0.4
-customBG.Image = ""
-customBG.Parent = Main
-
-local bgCorner = Instance.new("UICorner")
-bgCorner.CornerRadius = UDim.new(0, 6)
-bgCorner.Parent = customBG
-
-local tintFrame = Instance.new("Frame")
-tintFrame.Name = "ThemeTint"
-tintFrame.Size = UDim2.new(1, 0, 1, 0)
-tintFrame.ZIndex = 1
-tintFrame.BorderSizePixel = 0
-tintFrame.BackgroundColor3 = SelectedTheme.Background
-tintFrame.BackgroundTransparency = 0.35
-tintFrame.Parent = customBG
-
-local tintCorner = Instance.new("UICorner")
-tintCorner.CornerRadius = UDim.new(0, 6)
-tintCorner.Parent = tintFrame
-
--- Returns the correct Main BackgroundTransparency depending on whether a custom bg image is active.
--- When an image is set, Main must be fully transparent so the ImageLabel child is visible.
-local function mainBGTransparency()
-	return (customBG.Image ~= "") and 1 or 0
-end
-
-local function setBackgroundImage(assetId)
-	if assetId and assetId ~= "" then
-		local id = tostring(assetId):match("%d+") or tostring(assetId)
-		customBG.Image = "rbxassetid://" .. id
-	else
-		customBG.Image = ""
-	end
-	Main.BackgroundTransparency = mainBGTransparency()
-end
-
-RayfieldLibrary.SetBackgroundImage = setBackgroundImage
 
 local function getIcon(name : string): {id: number, imageRectSize: Vector2, imageRectOffset: Vector2}
 	if not Icons then
@@ -1547,7 +1494,7 @@ local function Unhide()
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 45)}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = mainBGTransparency()}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
@@ -1704,19 +1651,6 @@ local function createSettings(window)
 			end
 		end
 	end
-
-	-- Background Image input
-	newTab:CreateSection("Appearance")
-	newTab:CreateInput({
-		Name = "Background Image",
-		CurrentValue = "",
-		PlaceholderText = "Enter asset ID (e.g. 12345678)",
-		Ext = true,
-		RemoveTextAfterFocusLost = false,
-		Callback = function(Value)
-			setBackgroundImage(Value)
-		end,
-	})
 
 	settingsCreated = true
 	loadSettings()
@@ -2074,7 +2008,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Rayfield.Enabled = true
 
 	task.wait(0.5)
-	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = mainBGTransparency()}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
 	task.wait(0.1)
 	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
