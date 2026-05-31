@@ -969,7 +969,7 @@ local customBG = Instance.new("ImageLabel")
 customBG.Name = "CustomBackground"
 customBG.Size = UDim2.new(1, 0, 1, 0)
 customBG.Position = UDim2.new(0, 0, 0, 0)
-customBG.ZIndex = 0
+customBG.ZIndex = 1
 customBG.ScaleType = Enum.ScaleType.Crop
 customBG.BackgroundTransparency = 1
 customBG.ImageTransparency = 0.4
@@ -993,15 +993,20 @@ local tintCorner = Instance.new("UICorner")
 tintCorner.CornerRadius = UDim.new(0, 6)
 tintCorner.Parent = tintFrame
 
+-- Returns the correct Main BackgroundTransparency depending on whether a custom bg image is active.
+-- When an image is set, Main must be fully transparent so the ImageLabel child is visible.
+local function mainBGTransparency()
+	return (customBG.Image ~= "") and 1 or 0
+end
+
 local function setBackgroundImage(assetId)
 	if assetId and assetId ~= "" then
 		local id = tostring(assetId):match("%d+") or tostring(assetId)
 		customBG.Image = "rbxassetid://" .. id
-		Main.BackgroundTransparency = 0.15
 	else
 		customBG.Image = ""
-		Main.BackgroundTransparency = 0
 	end
+	Main.BackgroundTransparency = mainBGTransparency()
 end
 
 RayfieldLibrary.SetBackgroundImage = setBackgroundImage
@@ -1542,7 +1547,7 @@ local function Unhide()
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 45)}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = mainBGTransparency()}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
@@ -2069,7 +2074,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Rayfield.Enabled = true
 
 	task.wait(0.5)
-	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = mainBGTransparency()}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
 	task.wait(0.1)
 	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
